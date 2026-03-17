@@ -1,0 +1,375 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>만기매칭형 시뮬레이션 대시보드</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/papaparse@5.5.3/papaparse.min.js"></script>
+    <style>
+      body { font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Noto Sans KR", "Malgun Gothic", Arial, "Apple Color Emoji","Segoe UI Emoji"; }
+    </style>
+  </head>
+  <body class="min-h-screen bg-slate-50">
+    <div id="root"></div>
+
+    <script type="module">
+      import React, { useEffect, useMemo, useState } from "https://esm.sh/react@18.3.1";
+      import { createRoot } from "https://esm.sh/react-dom@18.3.1/client";
+
+      const TENORS = [
+        { label: "1Y", col: "1년이하(당일)", years: 1.0 },
+        { label: "1.5Y", col: "1.5년이하(당일)", years: 1.5 },
+        { label: "2Y", col: "2년이하(당일)", years: 2.0 },
+        { label: "2.5Y", col: "2.5년이하(당일)", years: 2.5 },
+        { label: "3Y", col: "3년이하(당일)", years: 3.0 },
+      ];
+
+      // "1년 앞" 근사 매핑 (파일 내 tenor 기준)
+      const PREV_1Y = {
+        "1Y": null,
+        "1.5Y": "6월이하(당일)", // 0.5Y
+        "2Y": "1년이하(당일)",
+        "2.5Y": "1.5년이하(당일)",
+        "3Y": "2년이하(당일)",
+      };
+
+      function toNum(v) {
+        const n = Number(v);
+        return Number.isFinite(n) ? n : null;
+      }
+
+      function pickRow(rows, includesText) {
+        const needle = String(includesText ?? "").trim();
+        if (!needle) return null;
+        const hit = rows.find((r) => String(r["종목명"] ?? "").includes(needle));
+        return hit ?? null;
+      }
+
+      function pickRowAny(rows, includesAny) {
+        for (const n of includesAny) {
+          const row = pickRow(rows, n);
+          if (row) return row;
+        }
+        return null;
+      }
+
+      function computeExpectedReturn(row) {
+        // ER(t) = y(t) + (y(t) - y(t-1y)) * duration(t)
+        // duration(t) ~ tenor years (CSV에 듀레이션 없음)
+        const out = {};
+        for (const t of TENORS) {
+          const prevCol = PREV_1Y[t.label];
+          if (!prevCol) continue;
+          const y = toNum(row[t.col]);
+          const yPrev = toNum(row[prevCol]);
+          if (y == null || yPrev == null) {
+            out[t.label] = null;
+          } else {
+            out[t.label] = y + (y - yPrev) * t.years;
+          }
+        }
+        return out;
+      }
+
+      function computeSimulationYield({ r1, w1Pct, r2, w2Pct, cdRate, repoRate }) {
+        // User-defined formula:
+        // r1*w1 + r2*w2 + cd * lev * 20% - repo * lev
+        // where lev 비중(%)은
+        //  - w1=100% -> 100%
+        //  - w1=120% -> 150%
+        //  - w1=160% -> 200%
+        if (r1 == null || r2 == null) return null;
+        const w1 = w1Pct / 100;
+        const w2 = w2Pct / 100;
+        let levPct;
+        if (w1Pct <= 100) levPct = 100;
+        else if (w1Pct <= 120) levPct = 150;
+        else levPct = 200;
+        const lev = levPct / 100;
+        return (r1 * w1) + (r2 * w2) + (cdRate * lev * 0.2) - (repoRate * lev);
+      }
+
+      function computeSimulationDuration({ tenorYears, w1Pct, w2Pct, cdDurationYears }) {
+        // Duration approximation:
+        // tenor * w1 + tenor * w2 + cdDuration(0.5y) * lev * 20%
+        // where lev 비중은 위와 동일 매핑(100/150/200)
+        const w1 = w1Pct / 100;
+        const w2 = w2Pct / 100;
+        let levPct;
+        if (w1Pct <= 100) levPct = 100;
+        else if (w1Pct <= 120) levPct = 150;
+        else levPct = 200;
+        const lev = levPct / 100;
+        return (tenorYears * w1) + (tenorYears * w2) + (cdDurationYears * lev * 0.2);
+      }
+
+      function App() {
+        const [rows, setRows] = useState([]);
+        const [error, setError] = useState("");
+        const [activeLeverage, setActiveLeverage] = useState("100%");
+        const [repoRateInput, setRepoRateInput] = useState("2.55");
+        const [cdRateInput, setCdRateInput] = useState("2.81");
+
+        useEffect(() => {
+          Papa.parse("전일민평종가표.csv", {
+            download: true,
+            header: true,
+            skipEmptyLines: true,
+            complete: (res) => {
+              setRows(res.data || []);
+              setError("");
+            },
+            error: (err) => setError(String(err)),
+          });
+        }, []);
+
+        // 매핑: 특은채/특수채/시은채/카드채/캐피탈채
+        const mapping = useMemo(() => ([
+          { type: "특은채", issuer: "산업은행" },
+          { type: "특수채", issuer: "한국전력공사" },
+          { type: "시은채", issuer: "국민은행" },
+          { type: "카드채", issuer: "케이비카드" },      // KB국민카드
+          { type: "캐피탈채", issuer: "KB캐피탈" },      // KB캐피탈 (CSV 표기)
+        ]), []);
+
+        const picked = useMemo(() => {
+          const out = [];
+          for (const m of mapping) {
+            // IMPORTANT: 발행사 매핑은 키워드 필터와 무관하게 "전체 CSV"에서 찾음
+            // (키워드 기본값이 '은행'이면 한국전력공사/케이비카드/KB캐피탈이 필터에서 빠질 수 있음)
+            const row =
+              m.type === "캐피탈채"
+                ? pickRowAny(rows, ["KB캐피탈", "케이비캐피탈", "kb캐피탈"])
+                : pickRow(rows, m.issuer);
+            out.push({ ...m, row });
+          }
+          return out;
+        }, [rows, mapping]);
+
+        const bondYields = useMemo(() => {
+          return picked.map((p) => {
+            const r = p.row;
+            const get = (col) => (r ? (toNum(r[col])?.toFixed(3) ?? "-") : "-");
+            return {
+              type: p.type,
+              issuer: p.issuer,
+              y1: get("1년이하(당일)"),
+              y1_5: get("1.5년이하(당일)"),
+              y2: get("2년이하(당일)"),
+              y2_5: get("2.5년이하(당일)"),
+              y3: get("3년이하(당일)"),
+            };
+          });
+        }, [picked]);
+
+        const asOf = useMemo(() => {
+          const any = picked.find((p) => p.row)?.row;
+          return any?.["날짜(당일)"] ?? "-";
+        }, [picked]);
+
+        const repoRate = useMemo(() => {
+          const v = Number(repoRateInput);
+          return Number.isFinite(v) ? v : 0;
+        }, [repoRateInput]);
+        const cdRate = useMemo(() => {
+          const v = Number(cdRateInput);
+          return Number.isFinite(v) ? v : 0;
+        }, [cdRateInput]);
+        const cdDurationYears = 0.5;
+
+        const leverageConfig = useMemo(() => {
+          // User requested weights:
+          // 100%: 100% + 80%
+          // 150%: 120% + 100%
+          // 200%: 160% + 100%
+          if (activeLeverage === "100%") return { w1Pct: 100, w2Pct: 80 };
+          if (activeLeverage === "150%") return { w1Pct: 120, w2Pct: 100 };
+          return { w1Pct: 160, w2Pct: 100 };
+        }, [activeLeverage]);
+
+        const leverageRows = useMemo(() => {
+          const base = picked.find((p) => p.type === "특은채")?.row; // 산업은행
+          if (!base) return [];
+
+          const scenarios = [];
+          const leverTypes = ["특은채", "특수채", "시은채", "카드채", "캐피탈채"];
+          for (const t of TENORS) {
+            const baseY = toNum(base[t.col]);
+            if (baseY == null) continue;
+            for (const lt of leverTypes) {
+              const lever = picked.find((p) => p.type === lt)?.row;
+              const leverY = lever ? toNum(lever[t.col]) : null;
+              const y = computeSimulationYield({
+                r1: baseY,
+                w1Pct: leverageConfig.w1Pct,
+                r2: leverY,
+                w2Pct: leverageConfig.w2Pct,
+                cdRate,
+                repoRate,
+              });
+              const d = computeSimulationDuration({
+                tenorYears: t.years,
+                w1Pct: leverageConfig.w1Pct,
+                w2Pct: leverageConfig.w2Pct,
+                cdDurationYears,
+              });
+              scenarios.push({
+                p1: `${t.label} 특은채(산업은행)`,
+                w1: `${leverageConfig.w1Pct}%`,
+                p2: `${t.label} ${lt}(${picked.find((p) => p.type === lt)?.issuer ?? "-"})`,
+                w2: `${leverageConfig.w2Pct}%`,
+                duration: d.toFixed(1),
+                yield: y == null ? "-" : y.toFixed(3),
+              });
+            }
+          }
+          return scenarios;
+        }, [picked, activeLeverage, leverageConfig, repoRate, cdRate]);
+
+        return (
+          React.createElement("div", { className: "p-6" },
+            React.createElement("header", { className: "mb-8 flex flex-col md:flex-row md:items-end justify-between border-b border-slate-200 pb-5" },
+              React.createElement("div", null,
+                React.createElement("h1", { className: "text-3xl font-bold text-slate-800 tracking-tight" }, "만기매칭형 시뮬레이션 대시보드"),
+                React.createElement("p", { className: "text-slate-500 mt-2" }, `기준일(파일): ${asOf} · 데이터: 전일민평종가표.csv`)
+              ),
+              React.createElement("div", { className: "mt-4 md:mt-0 flex gap-3 items-center" },
+                React.createElement("div", { className: "bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm" },
+                  React.createElement("div", { className: "text-slate-500 text-xs mb-1" }, "REPO 금리(%)"),
+                  React.createElement("input", {
+                    className: "outline-none w-24",
+                    value: repoRateInput,
+                    onChange: (e) => setRepoRateInput(e.target.value),
+                    placeholder: "예: 2.55",
+                  })
+                ),
+                React.createElement("div", { className: "bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm" },
+                  React.createElement("div", { className: "text-slate-500 text-xs mb-1" }, "CD 금리(%)"),
+                  React.createElement("input", {
+                    className: "outline-none w-24",
+                    value: cdRateInput,
+                    onChange: (e) => setCdRateInput(e.target.value),
+                    placeholder: "예: 2.81",
+                  })
+                )
+              )
+            ),
+
+            error ? React.createElement("div", { className: "bg-red-50 border border-red-200 text-red-700 rounded-lg p-3 mb-6" }, error) : null,
+
+            React.createElement("div", { className: "grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6" },
+              React.createElement("div", { className: "bg-white rounded-xl shadow-sm border border-slate-200 col-span-1 lg:col-span-3 overflow-hidden" },
+                React.createElement("div", { className: "bg-slate-800 px-6 py-4 flex items-center gap-2" },
+                  React.createElement("h2", { className: "text-lg font-bold text-white" }, "주요 채권금리 현황 (매핑 고정)")
+                ),
+                React.createElement("div", { className: "p-0 overflow-x-auto" },
+                  React.createElement("table", { className: "w-full text-left border-collapse" },
+                    React.createElement("thead", null,
+                      React.createElement("tr", { className: "bg-slate-50 border-b border-slate-200" },
+                        React.createElement("th", { className: "py-4 px-6 font-semibold text-slate-600 text-sm w-56" }, "채권 분류 (발행사)"),
+                        React.createElement("th", { className: "py-4 px-6 font-semibold text-slate-600 text-sm text-right" }, "1년"),
+                        React.createElement("th", { className: "py-4 px-6 font-semibold text-slate-600 text-sm text-right" }, "1.5년"),
+                        React.createElement("th", { className: "py-4 px-6 font-semibold text-slate-600 text-sm text-right" }, "2년"),
+                        React.createElement("th", { className: "py-4 px-6 font-semibold text-slate-600 text-sm text-right" }, "2.5년"),
+                        React.createElement("th", { className: "py-4 px-6 font-semibold text-slate-600 text-sm text-right" }, "3년")
+                      )
+                    ),
+                    React.createElement("tbody", { className: "divide-y divide-slate-100" },
+                      bondYields.map((row, idx) =>
+                        React.createElement("tr", { key: idx, className: "hover:bg-slate-50 transition-colors" },
+                          React.createElement("td", { className: "py-3 px-6 font-medium text-slate-800" }, `${row.type} (${row.issuer})`),
+                          React.createElement("td", { className: "py-3 px-6 text-right text-slate-600" }, row.y1 === "-" ? "-" : `${row.y1}%`),
+                          React.createElement("td", { className: "py-3 px-6 text-right text-slate-600" }, row.y1_5 === "-" ? "-" : `${row.y1_5}%`),
+                          React.createElement("td", { className: "py-3 px-6 text-right text-slate-600" }, row.y2 === "-" ? "-" : `${row.y2}%`),
+                          React.createElement("td", { className: "py-3 px-6 text-right text-slate-600" }, row.y2_5 === "-" ? "-" : `${row.y2_5}%`),
+                          React.createElement("td", { className: "py-3 px-6 text-right font-semibold text-blue-600" }, row.y3 === "-" ? "-" : `${row.y3}%`)
+                        )
+                      )
+                    )
+                  ),
+                  React.createElement("div", { className: "p-4 bg-slate-50 border-t border-slate-200 text-center text-sm text-slate-500" },
+                    "※ 위 표는 CSV에서 발행사 1개씩 매핑해 표시합니다. (특은채=산업은행, 특수채=한국전력공사, 시은채=국민은행, 카드채=KB국민카드, 캐피탈채=KB캐피탈)"
+                  )
+                )
+              )
+
+              ,React.createElement("div", { className: "bg-white rounded-xl shadow-sm border border-slate-200 col-span-1 lg:col-span-3 overflow-hidden" },
+                React.createElement("div", { className: "bg-slate-800 px-6 py-4 flex items-center justify-between" },
+                  React.createElement("h2", { className: "text-lg font-bold text-white" }, "만기매칭형 레버리지 시뮬레이션(간이)"),
+                  React.createElement("div", { className: "flex bg-slate-700 rounded-lg p-1" },
+                    ["100%","150%","200%"].map((lev) =>
+                      React.createElement("button", {
+                        key: lev,
+                        onClick: () => setActiveLeverage(lev),
+                        className:
+                          `px-4 py-1.5 rounded-md text-sm font-medium transition-all duration-200 ${
+                            activeLeverage === lev
+                              ? "bg-blue-500 text-white shadow"
+                              : "text-slate-300 hover:text-white hover:bg-slate-600"
+                          }`,
+                      }, `레버리지 ${lev}`)
+                    )
+                  )
+                ),
+                React.createElement("div", { className: "p-0 overflow-x-auto" },
+                  React.createElement("table", { className: "w-full text-left border-collapse" },
+                    React.createElement("thead", null,
+                      React.createElement("tr", { className: "bg-slate-50 border-b border-slate-200" },
+                        React.createElement("th", { className: "py-3 px-6 font-semibold text-slate-500 text-xs uppercase tracking-wider" }, "포트폴리오 1"),
+                        React.createElement("th", { className: "py-3 px-6 font-semibold text-slate-500 text-xs uppercase tracking-wider" }, "비중 1"),
+                        React.createElement("th", { className: "py-3 px-6 text-center text-slate-300 w-10" }, ""),
+                        React.createElement("th", { className: "py-3 px-6 font-semibold text-slate-500 text-xs uppercase tracking-wider" }, "포트폴리오 2"),
+                        React.createElement("th", { className: "py-3 px-6 font-semibold text-slate-500 text-xs uppercase tracking-wider" }, "비중 2"),
+                        React.createElement("th", { className: "py-3 px-6 font-semibold text-slate-500 text-xs uppercase tracking-wider text-right bg-blue-50/50" }, "듀레이션(년)"),
+                        React.createElement("th", { className: "py-3 px-6 font-semibold text-blue-600 text-xs uppercase tracking-wider text-right bg-blue-50/50" }, "수익률(%)")
+                      )
+                    ),
+                    React.createElement("tbody", { className: "divide-y divide-slate-100" },
+                      leverageRows.map((row, idx) => {
+                        const tenorKey =
+                          row.p1.startsWith("1.5Y") ? "1.5Y" :
+                          row.p1.startsWith("2Y") ? "2Y" :
+                          row.p1.startsWith("2.5Y") ? "2.5Y" :
+                          row.p1.startsWith("3Y") ? "3Y" :
+                          null;
+                        const tenorClass =
+                          tenorKey === "1.5Y" ? "bg-emerald-50/60" :
+                          tenorKey === "2Y" ? "bg-sky-50/60" :
+                          tenorKey === "2.5Y" ? "bg-amber-50/60" :
+                          tenorKey === "3Y" ? "bg-rose-50/60" :
+                          "";
+                        return React.createElement("tr", {
+                          key: idx,
+                          className: `${tenorClass} hover:bg-blue-50/60 transition-colors`,
+                        },
+                          React.createElement("td", { className: "py-4 px-6 font-medium text-slate-700" }, row.p1),
+                          React.createElement("td", { className: "py-4 px-6 text-slate-600" },
+                            React.createElement("span", { className: "inline-block bg-slate-100 px-2 py-1 rounded text-xs font-semibold" }, row.w1)
+                          ),
+                          React.createElement("td", { className: "py-4 px-2 text-center text-slate-300" }, "+"),
+                          React.createElement("td", { className: "py-4 px-6 font-medium text-slate-700" }, row.p2),
+                          React.createElement("td", { className: "py-4 px-6 text-slate-600" },
+                            React.createElement("span", { className: "inline-block bg-slate-100 px-2 py-1 rounded text-xs font-semibold" }, row.w2)
+                          ),
+                          React.createElement("td", { className: "py-4 px-6 text-right text-slate-700 font-semibold bg-blue-50/10" }, row.duration),
+                          React.createElement("td", { className: "py-4 px-6 text-right font-bold text-blue-600 bg-blue-50/10 text-lg" }, row.yield === "-" ? "-" : `${row.yield}%`)
+                        );
+                      })
+                    )
+                  ),
+                  React.createElement("div", { className: "p-4 bg-slate-50 border-t border-slate-200 text-center text-sm text-slate-500" },
+                    `※ 계산식: r1*w1 + r2*w2 + CD*lev*20% - REPO*lev (w1=100/120/160%일 때 lev=100/150/200%). CD 듀레이션은 ${cdDurationYears.toFixed(1)}년으로 반영.`
+                  )
+                )
+              )
+            )
+          )
+        );
+      }
+
+      createRoot(document.getElementById("root")).render(React.createElement(App));
+    </script>
+  </body>
+</html>
+
