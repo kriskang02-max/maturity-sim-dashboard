@@ -22,12 +22,35 @@ try {
     }
     Log "엑셀 실행 중 (매크로 완료 시까지 대기)..."
     $p = Start-Process -FilePath $excelPath -PassThru -Wait -WorkingDirectory $scriptDir
+    $excelExitTime = Get-Date
     Log "엑셀 종료됨 (종료코드: $($p.ExitCode))."
 
-    # CSV 파일 쓰기 완료 대기 (엑셀 종료 후 디스크 반영 시간)
-    $delaySeconds = 15
-    Log "CSV 반영 대기 중 ($delaySeconds 초)..."
-    Start-Sleep -Seconds $delaySeconds
+    $csvPath = Join-Path $scriptDir "yield_table.csv"
+    # CSV 파일이 엑셀 실행 중/직후에 쓰였는지 확인 (종료 시각 기준 2분 이내 수정이면 반영된 것으로 봄)
+    Start-Sleep -Seconds 10
+    $csvReady = $false
+    $cutoff = $excelExitTime.AddSeconds(-120)
+    for ($i = 1; $i -le 6; $i++) {
+        if (Test-Path $csvPath) {
+            $csvItem = Get-Item $csvPath
+            $lastWrite = $csvItem.LastWriteTime
+            if ($lastWrite -ge $cutoff) {
+                $csvReady = $true
+                Log "yield_table.csv ready (last write: $($lastWrite.ToString('yyyy-MM-dd HH:mm:ss')))."
+                break
+            }
+        }
+        Log "Waiting for CSV... ($i/6)"
+        Start-Sleep -Seconds 5
+    }
+    if (-not $csvReady -and (Test-Path $csvPath)) {
+        Log "CSV exists but not updated in window; proceeding anyway."
+        $csvReady = $true
+    }
+    if (-not $csvReady) {
+        Log "Error: yield_table.csv not found - $csvPath"
+        exit 1
+    }
 
     # 2) Git 푸시
     $gitOk = $false
@@ -37,17 +60,39 @@ try {
         exit 1
     }
 
-    git add "yield_table.csv"
+    git add $csvPath
+    $staged = (git diff --cached --name-only 2>&1) -match "yield_table\.csv"
+    if (-not $staged) {
+        git add --renormalize $csvPath 2>&1 | Out-Null
+        $staged = (git diff --cached --name-only 2>&1) -match "yield_table\.csv"
+    }
+    Log "yield_table.csv staged for commit: $(if ($staged) { 'yes' } else { 'no change' })"
+
     $today = Get-Date -Format "yyyy-MM-dd"
     $msg = "Update daily CSV $today"
-    git commit -m $msg 2>&1 | ForEach-Object { Log $_ }
-    if ($LASTEXITCODE -eq 0) {
-        git push 2>&1 | ForEach-Object { Log $_ }
-        if ($LASTEXITCODE -eq 0) { $gitOk = $true }
-    } else {
-        Log "커밋할 변경 없음 또는 커밋 오류."
-        # 변경 없으면 성공으로 간주
+    $commitOut = git commit -m $msg 2>&1
+    $commitOut | ForEach-Object { Log $_ }
+    $commitSucceeded = ($LASTEXITCODE -eq 0)
+
+    # 커밋 성공 여부와 관계없이 원격에 안 밀린 커밋이 있으면 푸시 시도 (비대화형에서 자격증명 사용)
+    $env:GIT_TERMINAL_PROMPT = "0"
+    $pushOut = git push 2>&1
+    $pushOut | ForEach-Object { Log $_ }
+    $pushSucceeded = ($LASTEXITCODE -eq 0)
+    if (-not $pushSucceeded) {
+        Log "Push failed. Run once in terminal: cd $scriptDir; git push  (log in when prompted, then auto-push may work next time)."
+    }
+
+    if ($pushSucceeded) {
         $gitOk = $true
+        if (-not $commitSucceeded) {
+            Log "No local commit (CSV unchanged vs last commit). Push completed for any existing commits."
+            Log "To push current CSV once manually: git add yield_table.csv && git commit -m \"Update daily CSV\" && git push"
+        }
+    } else {
+        if (-not $commitSucceeded) {
+            Log "No commit and push failed. Try in terminal: cd $scriptDir; git add yield_table.csv; git commit -m 'Update daily CSV'; git push"
+        }
     }
 
     if ($gitOk) {
