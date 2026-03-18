@@ -1,0 +1,2 @@
+# CSV: no line-ending conversion so Excel saves are detected as changes
+yield_table.csv !text
