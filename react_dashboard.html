@@ -39,10 +39,25 @@
         return Number.isFinite(n) ? n : null;
       }
 
+      function normalizeRowKeys(row) {
+        const r = {};
+        for (const k of Object.keys(row)) {
+          let key = String(k).replace(/^\uFEFF/, "").trim();
+          const baseKey = key.replace(/\.\d+$/, "");
+            if (r[baseKey] === undefined) r[baseKey] = row[k];
+        }
+        return r;
+      }
+
+      function getIssuerName(row) {
+        const keys = Object.keys(row);
+        return String(row["종목명"] ?? (keys[0] ? row[keys[0]] : "") ?? "").trim();
+      }
+
       function pickRow(rows, includesText) {
         const needle = String(includesText ?? "").trim();
         if (!needle) return null;
-        const hit = rows.find((r) => String(r["종목명"] ?? "").includes(needle));
+        const hit = rows.find((r) => getIssuerName(r).includes(needle));
         return hit ?? null;
       }
 
@@ -112,16 +127,30 @@
         const [cdRateInput, setCdRateInput] = useState("2.81");
 
         useEffect(() => {
-          Papa.parse("전일민평종가표.csv", {
-            download: true,
-            header: true,
-            skipEmptyLines: true,
-            complete: (res) => {
-              setRows(res.data || []);
-              setError("");
-            },
-            error: (err) => setError(String(err)),
-          });
+          function tryLoad(url) {
+            Papa.parse(url, {
+              download: true,
+              header: true,
+              skipEmptyLines: true,
+              complete: (res) => {
+                const raw = res.data || [];
+                const normalized = raw.map(normalizeRowKeys);
+                setRows(normalized);
+                setError("");
+                if (normalized.length === 0 && url === "yield_table.csv") {
+                  tryLoad("전일민평종가표.csv");
+                }
+              },
+              error: (err) => {
+                if (url === "yield_table.csv") {
+                  tryLoad("전일민평종가표.csv");
+                } else {
+                  setError("CSV 로드 실패: " + String(err));
+                }
+              },
+            });
+          }
+          tryLoad("yield_table.csv");
         }, []);
 
         // 매핑: 특은채/특수채/시은채/카드채/캐피탈채
@@ -232,7 +261,7 @@
             React.createElement("header", { className: "mb-8 flex flex-col md:flex-row md:items-end justify-between border-b border-slate-200 pb-5" },
               React.createElement("div", null,
                 React.createElement("h1", { className: "text-3xl font-bold text-slate-800 tracking-tight" }, "만기매칭형 시뮬레이션 대시보드"),
-                React.createElement("p", { className: "text-slate-500 mt-2" }, `기준일(파일): ${asOf} · 데이터: 전일민평종가표.csv`)
+                React.createElement("p", { className: "text-slate-500 mt-2" }, `기준일(파일): ${asOf} · 자료제공: 신한자산운용`)
               ),
               React.createElement("div", { className: "mt-4 md:mt-0 flex gap-3 items-center" },
                 React.createElement("div", { className: "bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm" },
@@ -261,7 +290,7 @@
             React.createElement("div", { className: "grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6" },
               React.createElement("div", { className: "bg-white rounded-xl shadow-sm border border-slate-200 col-span-1 lg:col-span-3 overflow-hidden" },
                 React.createElement("div", { className: "bg-slate-800 px-6 py-4 flex items-center gap-2" },
-                  React.createElement("h2", { className: "text-lg font-bold text-white" }, "주요 채권금리 현황 (매핑 고정)")
+                  React.createElement("h2", { className: "text-lg font-bold text-white" }, "주요 채권금리 현황")
                 ),
                 React.createElement("div", { className: "p-0 overflow-x-auto" },
                   React.createElement("table", { className: "w-full text-left border-collapse" },
@@ -287,16 +316,13 @@
                         )
                       )
                     )
-                  ),
-                  React.createElement("div", { className: "p-4 bg-slate-50 border-t border-slate-200 text-center text-sm text-slate-500" },
-                    "※ 위 표는 CSV에서 발행사 1개씩 매핑해 표시합니다. (특은채=산업은행, 특수채=한국전력공사, 시은채=국민은행, 카드채=KB국민카드, 캐피탈채=KB캐피탈)"
                   )
                 )
               )
 
               ,React.createElement("div", { className: "bg-white rounded-xl shadow-sm border border-slate-200 col-span-1 lg:col-span-3 overflow-hidden" },
                 React.createElement("div", { className: "bg-slate-800 px-6 py-4 flex items-center justify-between" },
-                  React.createElement("h2", { className: "text-lg font-bold text-white" }, "만기매칭형 레버리지 시뮬레이션(간이)"),
+                  React.createElement("h2", { className: "text-lg font-bold text-white" }, "만기매칭형 레버리지 시뮬레이션"),
                   React.createElement("div", { className: "flex bg-slate-700 rounded-lg p-1" },
                     ["100%","150%","200%"].map((lev) =>
                       React.createElement("button", {
@@ -358,8 +384,8 @@
                       })
                     )
                   ),
-                  React.createElement("div", { className: "p-4 bg-slate-50 border-t border-slate-200 text-center text-sm text-slate-500" },
-                    `※ 계산식: r1*w1 + r2*w2 + CD*lev*20% - REPO*lev (w1=100/120/160%일 때 lev=100/150/200%). CD 듀레이션은 ${cdDurationYears.toFixed(1)}년으로 반영.`
+                  React.createElement("div", { className: "p-4 bg-slate-50 border-t border-slate-200 text-left text-sm text-slate-500", style: { whiteSpace: "pre-line" } },
+                    "※ 매트릭스의 예시 수익률은 편입 채권의 이자수익만을 고려한 것으로, 금리 변동에 따른 자본 손익은 반영하지 않았습니다.\n※ 예시수익률은 편입된 자산을 만기까지 보유하여 금리 변동에 의한 자본 손익이 '0'에 수렴한다는 가정 하에 산출된 연환산 수익률입니다.\n※ 레버리지(차입) 가정 시 적용된 REPO 금리는 현재 기준금리에 5bp(0.05%p)를 가산하여 산출하였습니다.\n※ 제시된 수익률은 펀드 관련 보수 및 제반 비용을 차감하기 전의 총 수익률 기준이며, 실제 투자 시 보수 차감 등으로 수익률이 낮아질 수 있습니다."
                   )
                 )
               )

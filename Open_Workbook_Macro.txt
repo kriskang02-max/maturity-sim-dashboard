@@ -1,0 +1,40 @@
+' ============================================================
+' yield_table.xlsm 에 넣을 VBA 매크로 (전체)
+' ============================================================
+' 넣는 방법:
+'   1) yield_table.xlsm 열기
+'   2) Alt + F11 → VBA 편집기
+'   3) 왼쪽에서 "ThisWorkbook" 더블클릭
+'   4) 위쪽에서 [Workbook] / [Open] 선택
+'   5) 아래 코드 전체를 붙여넣고 Ctrl+S 저장
+' ============================================================
+
+Private Sub Workbook_Open()
+    Dim csvPath As String
+
+    ' 저장할 CSV 경로 (본인 PC 경로에 맞게 수정)
+    csvPath = "C:\Users\infomax\Documents\Cursor\yield_table.csv"
+
+    Application.Calculation = xlCalculationAutomatic
+    Application.DisplayAlerts = False
+
+    ' 1) 외부 데이터 연결 새로 고침
+    ThisWorkbook.RefreshAll
+    Application.Wait Now + TimeValue("00:02:00")   ' 2분 대기
+
+    ' 2) 수식 전체 재계산
+    Application.Calculate
+    Application.Wait Now + TimeValue("00:01:00")   ' 1분 추가 대기
+
+    ' 3) UTF-8 CSV로 저장 (웹 대시보드에서 한글이 깨지지 않도록)
+    '    xlCSVUTF8 = 62 (Excel 2016 이상). 구버전이면 62 대신 6(xlCSV) 쓰면 되지만 한글이 깨질 수 있음
+    On Error Resume Next
+    ThisWorkbook.SaveAs Filename:=csvPath, FileFormat:=62
+    If Err.Number <> 0 Then
+        ThisWorkbook.SaveAs Filename:=csvPath, FileFormat:=xlCSV
+    End If
+    On Error GoTo 0
+
+    ThisWorkbook.Saved = True
+    Application.Quit
+End Sub
