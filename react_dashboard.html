@@ -6,6 +6,8 @@
     <title>만기매칭형 시뮬레이션 대시보드</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/papaparse@5.5.3/papaparse.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
     <style>
       body { font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Noto Sans KR", "Malgun Gothic", Arial, "Apple Color Emoji","Segoe UI Emoji"; }
     </style>
@@ -33,6 +35,10 @@
         "2.5Y": "1.5년이하(당일)",
         "3Y": "2년이하(당일)",
       };
+
+      function sleep(ms) {
+        return new Promise((resolve) => setTimeout(resolve, ms));
+      }
 
       function toNum(v) {
         const n = Number(v);
@@ -256,8 +262,44 @@
           return scenarios;
         }, [picked, activeLeverage, leverageConfig, repoRate, cdRate]);
 
+        async function handleExportPdf() {
+          if (!window.html2canvas || !window.jspdf) {
+            alert("PDF 생성 라이브러리가 로드되지 않았습니다. 잠시 후 다시 시도해주세요.");
+            return;
+          }
+          const { jsPDF } = window.jspdf;
+          const doc = new jsPDF("p", "mm", "a4");
+          const leverages = ["100%", "150%", "200%"];
+          const target = document.getElementById("pdf-root");
+          if (!target) {
+            alert("PDF 대상으로 사용할 영역을 찾지 못했습니다.");
+            return;
+          }
+
+          let firstPage = true;
+          for (const lev of leverages) {
+            setActiveLeverage(lev);
+            await sleep(800);
+            const canvas = await window.html2canvas(target, { scale: 2, useCORS: true });
+            const imgData = canvas.toDataURL("image/png");
+            const pageWidth = doc.internal.pageSize.getWidth();
+            const pageHeight = doc.internal.pageSize.getHeight();
+            const imgWidth = pageWidth;
+            const imgHeight = canvas.height * (imgWidth / canvas.width);
+            const yPos = 0;
+            if (!firstPage) {
+              doc.addPage();
+            }
+            doc.addImage(imgData, "PNG", 0, yPos, imgWidth, imgHeight);
+            firstPage = false;
+          }
+
+          const todayStr = new Date().toISOString().slice(0, 10);
+          doc.save(`만기매칭_시뮬레이션_${todayStr}.pdf`);
+        }
+
         return (
-          React.createElement("div", { className: "p-6" },
+          React.createElement("div", { id: "pdf-root", className: "p-6" },
             React.createElement("header", { className: "mb-8 flex flex-col md:flex-row md:items-end justify-between border-b border-slate-200 pb-5" },
               React.createElement("div", null,
                 React.createElement("h1", { className: "text-3xl font-bold text-slate-800 tracking-tight" }, "만기매칭형 시뮬레이션 대시보드"),
@@ -281,6 +323,13 @@
                     onChange: (e) => setCdRateInput(e.target.value),
                     placeholder: "예: 2.81",
                   })
+                ),
+                React.createElement("button", {
+                  type: "button",
+                  onClick: handleExportPdf,
+                  className: "inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium shadow-sm transition-colors",
+                },
+                  React.createElement("span", null, "PDF 저장")
                 )
               )
             ),
