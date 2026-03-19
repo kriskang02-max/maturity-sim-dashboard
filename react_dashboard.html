@@ -125,12 +125,33 @@
         return (tenorYears * w1) + (tenorYears * w2) + (cdDurationYears * lev * 0.2);
       }
 
+      const CSV_COMMITS_API = "https://api.github.com/repos/kriskang02-max/maturity-sim-dashboard/commits?path=yield_table.csv&per_page=30";
+      const RAW_CSV_BASE = "https://raw.githubusercontent.com/kriskang02-max/maturity-sim-dashboard";
+
       function App() {
         const [rows, setRows] = useState([]);
         const [error, setError] = useState("");
         const [activeLeverage, setActiveLeverage] = useState("100%");
         const [repoRateInput, setRepoRateInput] = useState("2.55");
         const [cdRateInput, setCdRateInput] = useState("2.81");
+        const [commitList, setCommitList] = useState([]);
+        const [selectedCommit, setSelectedCommit] = useState(null);
+
+        useEffect(() => {
+          fetch(CSV_COMMITS_API)
+            .then((r) => r.json())
+            .then((arr) => {
+              if (!Array.isArray(arr)) return;
+              const list = arr.map((c) => {
+                const msg = c.commit?.message || "";
+                const m = msg.match(/(\d{4})-?(\d{2})-?(\d{2})/);
+                const dateStr = m ? m[1] + "-" + m[2] + "-" + m[3] : (c.commit?.author?.date || "").slice(0, 10);
+                return { sha: c.sha, dateStr, label: dateStr || c.sha.slice(0, 7) };
+              });
+              setCommitList(list);
+            })
+            .catch(() => {});
+        }, []);
 
         useEffect(() => {
           function tryLoad(url) {
@@ -143,12 +164,12 @@
                 const normalized = raw.map(normalizeRowKeys);
                 setRows(normalized);
                 setError("");
-                if (normalized.length === 0 && url.startsWith("yield_table.csv")) {
+                if (normalized.length === 0 && (url.startsWith("yield_table.csv") || url.includes("yield_table.csv"))) {
                   tryLoad("전일민평종가표.csv");
                 }
               },
               error: (err) => {
-                if (url.startsWith("yield_table.csv")) {
+                if (url.startsWith("yield_table.csv") || url.includes("yield_table.csv")) {
                   tryLoad("전일민평종가표.csv");
                 } else {
                   setError("CSV 로드 실패: " + String(err));
@@ -156,8 +177,11 @@
               },
             });
           }
-          tryLoad("yield_table.csv?t=" + Date.now());
-        }, []);
+          const csvUrl = selectedCommit
+            ? RAW_CSV_BASE + "/" + selectedCommit + "/yield_table.csv"
+            : "yield_table.csv?t=" + Date.now();
+          tryLoad(csvUrl);
+        }, [selectedCommit]);
 
         // 매핑: 특은채/특수채/시은채/카드채/캐피탈채
         const mapping = useMemo(() => ([
@@ -305,7 +329,20 @@
                 React.createElement("h1", { className: "text-3xl font-bold text-slate-800 tracking-tight" }, "만기매칭형 시뮬레이션 대시보드"),
                 React.createElement("p", { className: "text-slate-500 mt-2" }, `기준일(파일): ${asOf} · 자료제공: 신한자산운용`)
               ),
-              React.createElement("div", { className: "mt-4 md:mt-0 flex gap-3 items-center" },
+              React.createElement("div", { className: "mt-4 md:mt-0 flex flex-wrap gap-3 items-center" },
+                React.createElement("div", { className: "bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm" },
+                  React.createElement("div", { className: "text-slate-500 text-xs mb-1" }, "기준일 선택"),
+                  React.createElement("select", {
+                    className: "outline-none bg-transparent text-slate-700 font-medium",
+                    value: selectedCommit || "",
+                    onChange: (e) => setSelectedCommit(e.target.value || null),
+                  },
+                    React.createElement("option", { value: "" }, "최신"),
+                    commitList.map((c) =>
+                      React.createElement("option", { key: c.sha, value: c.sha }, c.label)
+                    )
+                  )
+                ),
                 React.createElement("div", { className: "bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm" },
                   React.createElement("div", { className: "text-slate-500 text-xs mb-1" }, "REPO 금리(%)"),
                   React.createElement("input", {
