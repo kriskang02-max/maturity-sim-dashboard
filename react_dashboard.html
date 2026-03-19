@@ -143,12 +143,12 @@
                 const normalized = raw.map(normalizeRowKeys);
                 setRows(normalized);
                 setError("");
-                if (normalized.length === 0 && url === "yield_table.csv") {
+                if (normalized.length === 0 && url.startsWith("yield_table.csv")) {
                   tryLoad("전일민평종가표.csv");
                 }
               },
               error: (err) => {
-                if (url === "yield_table.csv") {
+                if (url.startsWith("yield_table.csv")) {
                   tryLoad("전일민평종가표.csv");
                 } else {
                   setError("CSV 로드 실패: " + String(err));
@@ -156,7 +156,7 @@
               },
             });
           }
-          tryLoad("yield_table.csv");
+          tryLoad("yield_table.csv?t=" + Date.now());
         }, []);
 
         // 매핑: 특은채/특수채/시은채/카드채/캐피탈채
