@@ -149,6 +149,7 @@
                 return { sha: c.sha, dateStr, label: dateStr || c.sha.slice(0, 7) };
               });
               setCommitList(list);
+              if (list.length > 0 && selectedCommit === null) setSelectedCommit(list[0].sha);
             })
             .catch(() => {});
         }, []);
@@ -177,10 +178,8 @@
               },
             });
           }
-          const csvUrl = selectedCommit
-            ? RAW_CSV_BASE + "/" + selectedCommit + "/yield_table.csv"
-            : "yield_table.csv?t=" + Date.now();
-          tryLoad(csvUrl);
+          if (!selectedCommit) return;
+          tryLoad(RAW_CSV_BASE + "/" + selectedCommit + "/yield_table.csv");
         }, [selectedCommit]);
 
         // 매핑: 특은채/특수채/시은채/카드채/캐피탈채
@@ -334,10 +333,9 @@
                   React.createElement("div", { className: "text-slate-500 text-xs mb-1" }, "기준일 선택"),
                   React.createElement("select", {
                     className: "outline-none bg-transparent text-slate-700 font-medium",
-                    value: selectedCommit || "",
-                    onChange: (e) => setSelectedCommit(e.target.value || null),
+                    value: selectedCommit || (commitList[0]?.sha ?? ""),
+                    onChange: (e) => setSelectedCommit(e.target.value),
                   },
-                    React.createElement("option", { value: "" }, "최신"),
                     commitList.map((c) =>
                       React.createElement("option", { key: c.sha, value: c.sha }, c.label)
                     )
