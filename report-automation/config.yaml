@@ -1,0 +1,30 @@
+# 작업 폴더: C:\Users\infomax\Documents\Report
+
+output_dir: C:/Users/infomax/Documents/Report/raw
+session_name: report_automation
+
+use_today_kst: true
+hours_back: null
+max_messages_per_chat: 200
+
+# 1:1 채팅(상대 이름) · 그룹 · 채널 모두 가능
+# title_contains: 대화 목록 제목에 포함된 글자 (list_chats.py 로 확인 가능)
+chats:
+  - label: "SK 채권영업팀 Yoon"
+    title_contains: "SK 채권영업팀 Yoon"
+  - label: "상상인증권 FICC 채권정보방"
+    title_contains: "상상인증권"
+  - label: "KB 채권 (임재균·박문현)"
+    title_contains: "KB 채권"
+  - label: "관우 박"
+    title_contains: "관우 박"
+  - label: "키움증권 한지영"
+    title_contains: "키움증권 전략"
+  - label: "충 박"
+    title_contains: "충 박"
+  - label: "MERITZ CMS팀"
+    title_contains: "MERITZ CMS"
+  - label: "쭈니방"
+    title_contains: "쭈니방"
+  - label: "현지 김"
+    id: 1468636481
