@@ -1,0 +1,19 @@
+# 메시지를 가져올 채팅 목록
+# - list_chats.py 실행 후 id / username / title 중 하나로 지정
+# - id: 숫자(그룹은 보통 -100... 형태)
+# - username: @ 없이 채널 username (공개 채널)
+# - title: 대화 목록 제목 부분 일치 (한글 방 이름)
+
+output_dir: C:/Users/infomax/Documents/Report/raw
+session_name: report_automation
+
+# 기본: 오늘 00:00(KST) 이후 메시지. hours_back을 쓰면 상대 시간
+use_today_kst: true
+hours_back: null
+
+# 채팅별 최대 메시지 수 (null = 제한 없음, 단 since 필터 적용)
+max_messages_per_chat: 200
+
+chats:
+  - label: "윤태선"
+    title_contains: "윤태선"
