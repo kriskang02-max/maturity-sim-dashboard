@@ -2,3 +2,9 @@ logs/
 __pycache__/
 *.xlsm
 *.xlsx
+
+# Report 작업은 C:\Users\infomax\Documents\Report (별도 폴더)
+
+.cursor/settings.json
+telegram_report/.env
+telegram_report/sessions/

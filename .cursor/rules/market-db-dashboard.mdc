@@ -1,0 +1,14 @@
+---
+description: Dashboard, VBA exports, and CSV data live under market_db_dashboard — edit there, not duplicate stubs in Cursor.
+alwaysApply: true
+---
+
+# market_db_dashboard 작업 위치
+
+대시보드(`dashboard.html`), `market_db.csv` / `fund_db.csv` / `issues.csv`, 그리고 관련 VBA(예: `ExportMarketDbLong.bas`, `FundDb_ManualCsvExport.bas`)의 **원본·실행 기준 폴더**는 다음입니다.
+
+`C:\Users\infomax\Documents\market_db_dashboard`
+
+- HTML·CSV·대시보드 기능을 수정할 때는 위 경로의 파일을 직접 읽고 쓴다.
+- `Documents\Cursor\dashboard.html`은 안내용 스텁일 수 있으므로, 대시보드 본문은 `market_db_dashboard\dashboard.html`만 유지한다.
+- 사용자에게 열 파일을 안내할 때도 위 폴더 기준으로 말한다.

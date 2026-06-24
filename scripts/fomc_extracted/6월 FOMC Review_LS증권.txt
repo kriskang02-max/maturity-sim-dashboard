@@ -1,0 +1,482 @@
+--- Page 1 ---
+ 
+ 
+ 
+LS Edge Investment Strategy | 투자코멘트 | 2026. 6. 18  
+6월 FOMC Review:  
+연준 체제 전환의 예고편 
+ 
+채권 | 우혜영 | whydele@ls-sec.co.kr 
+ 
+ 
+연준 체제 전환을 위한 첫 걸음 
+6월 FOMC 회의에서 정책금리는 3.50%~3.75%로 동결되었다. 이날 공개된 통화정책 성명문은 기존 성명문 대비 ‘간결(shorter) 
+하고, 단순(simpler)해졌으며, 옛날식 표현(older language)이 일부 삭제’되었다. 시장에서 주목한 향후 통화정책 관련 포워드가이던
+스는 現 정책 환경에 적합하지 않다는 판단 하에 삭제되었다. 기자회견에서 케빈 워시 의장은 포워드가이던스가 통화정책 결정 관련 
+논의에 도움이 되지 않으며, 연준이 판단할 수 있는 최선의 사실만을 전달하기로 했다고 설명했다. 그리고 연준 운영방식 개편을 위해 
+①커뮤니케이션, ②대차대조표, ③경제데이터 활용, ④생산성과 고용, ⑤인플레이션 대응 체계 등 5가지 핵심 사안에 대한 태스크 포
+스를 신설해 전면 검토해 나갈 것을 밝혔다. 
+점 1개로 갈린 향후 정책금리 경로? 
+워시 의장은 現 구조의 SEP에 대한 자신의 오랜 견해에 따라 전망치를 제시하지 않았지만 위원들에게는 관행대로 전망치를 제출하
+도록 권장했다고 언급했다. 6월 점도표에 따르면 올해 전망의 경우 인하 12명→1명, 동결 7명→8명, 인상 0명→9명으로 수정되었다. 
+워시 의장 발언을 고려 시, 이번 FOMC 회의에서 단 1명의 위원도 즉각 금리 인상에 나서야한다고 주장하지 않았지만 일부 위원들은 
+연내 인상 가능성 또는 필요성을 염두에 두고 있다는 점은 분명히 알 수 있었다. 중간값 기준에 근거한 향후 정책금리 예상 경로는 올
+해 1회 인상 후 2027년과 2028년에 각각 1회씩 인하다. 이에 CME FED Watch 상 인상 시점은 12월→9월로 앞당겨졌으며 장중 
+미국채 2년물 금리가 10년물 대비 큰 폭 상승했다. 만약 워시 의장이 올해 동결에 점을 찍었다면 동결 장기화 후 2028년에 인하가 
+재개되는 경로도 배제할 수 없다는 점에서 이날 미국채 단기물 금리 반응은 다소 과도했다는 판단이다. 
+표1 5 개의 태스크 포스 관련 주요 내용 
+5 개 주요 사안 내용 
+연준 소통 
+(Communications) - 통화정책 성명문∙기자 간담회∙경제전망(SEP) 및 점도표∙회의록 및 녹취록 등 소통 방식 전면 재검토 
+대차대조표 
+(Balance sheet) 
+- 현재의 풍부한 지급준비금 제도의 편익과 잠재적 리스크 평가 
+- 연준 대차대조표 자산 구성 적절한지 검토 
+- 기준금리 도구와 대차대조표 도구 간 불균등한 통화정책 전달 경로 분석 
+- 통화정책 집행 및 운영을 위한 대안적 프레임워크 설계 
+데이터(Data) 
+- 통화∙경제 통계 관련 구식 데이터 수집 방법론 개선 및 오차 범위 축소 
+- 민간 기업 CEO 들이 사용하는 실시간 데이터 소스 적극 도입 
+-  AI 및 최신 분석 기법 활용해 지표가 '근원(core)이냐, 비근원(Non-Core)이냐'는 단순 이분법을 넘어 정밀 데이터 구축 
+- 정책 결정자들에게 단순 통계가 아닌, 즉각 실행 가능한 '동시대적∙실시간 정보' 제공 
+전환기 시대의 생산성과 고용 
+(Productivity and jobs) 
+-  AI 및 신기술 도입 속도∙파급 범위∙거시경제적 영향력 정밀 조사 
+- 현재 기술 붐이 인프라 투자(데이터 센터, 전력 등)으로 인해 수요만 자극하는 단계인지, 실제 생산성 향상이라는 공급  
+확대로 이어지는 단계인지 그 속도와 시차 분석 
+- 생산성 향상이 고용 시장의 체제 및 잠재성장률에 미치는 통화정책적 시사점 도출 
+인플레이션 프레임워크 
+(Inflation frameworks) 
+- 현대 경제 구조 변화 속에서 인플레이션을 유발하는 근본적인 동인(drivers) 재정의 
+- 인플레이션 측정 방식의 적절성 검토(데이터 TF 와 협업) 
+- 구조적으로 변화한 경제 환경(지정학 리스크, 기술 혁명 등) 가운데 물가안정을 전달하기 위한 통화정책적 아이디어 도출 
+-  2%라는 목표 수치 자체 변경은 2% 목표 달성하기 전까지는 재검토 할 이유 없음 
+자료: LS증권 리서치센터 
+ 
+ 
+--- Page 2 ---
+투자코멘트 / The Bond / 2026. 6. 18 
+ 
+LS Securities Research 2 
+ 
+그림1 2026 년 3 월 점도표  그림2 2026 년 6 월 점도표 
+ 
+ 
+ 
+자료: Fed 「SEP(2026. 3.18)」, LS증권 리서치센터  자료: Fed 「SEP(2026. 6.17)」, LS증권 리서치센터 
+ 
+표1 2026 년 3 월 정책금리별 전망 위원 수  표2 2026 년 6 월 정책금리별 전망 위원 수 
+정책금리(%) 2026 년 2027 년 2028 년 Longer run 
+5.125     
+5.0     
+4.875     
+4.75     
+4.625     
+4.5     
+4.375     
+4.25     
+4.125     
+4.0     
+3.875  1 1 1 
+3.75    1 
+3.625(동결) 7 3 3 1 
+3.5    1 
+3.375(1 회) 7 4 3 2 
+3.25    1 
+3.125(2 회) 2 6 7 3 
+3.0    5 
+2.875(3 회) 2 3 3 2 
+2.75     
+2.625(4 회) 1 1 2 2 
+2.5     
+2.375  1   
+2.250     
+2.125     
+2.000     
+ 
+ 
+정책금리(%) 2026 년 2027 년 2028 년 Longer run 
+5.125     
+5.0     
+4.875     
+4.75     
+4.625     
+4.5     
+4.375(3 회) 1   1   
+4.25     
+4.125(2 회) 5 2   
+4.0     
+3.875(1 회) 3 5 3 1 
+3.75    1 
+3.625(동결) 8 2 5 1 
+3.5    1 
+3.375(1 회) 1 3 2 2 
+3.25    1 
+3.125  4 6 2 
+3.0    7 
+2.875  1 1 2 
+2.75     
+2.625     
+2.5     
+2.375     
+2.250     
+2.125     
+2.000     
+ 
+자료: Fed 「SEP(2026.3.18)」, LS증권 리서치센터  자료: Fed 「SEP(2026.6.17)」, LS증권 리서치센터 
+ 
+그림3 연준 장기 중립금리 변화 
+ 
+자료: Fed, LS증권 리서치센터 
+1.5
+2.0
+2.5
+3.0
+3.5
+4.0
+4.5
+5.0
+12/01 12/12 13/11 14/10 15/09 16/08 17/07 18/06 19/05 20/04 21/03 22/02 23/01 23/12 24/11 25/10 26/09
+(%) 장기 연방기금금리 전망(Median)
+25bp 인하 
+3.4% 유지 
+ 
+장기중립금리 
+3.0% → 3.1% 
+ 
+25bp 인하 
+3.1% 유지 
+ 
+동결 
+3.1% 유지 
+ 
+25bp 인상 
+3.4%→3.8% 
+ 
+장기중립금리 
+3.1% 유지 
+ 
+25bp 인하 
+3.1%→3.6% 
+25bp 인하 
+3.1%→3.4% 
+유지 
+ 
+--- Page 3 ---
+ 투자코멘트 / The Bond / 2026. 6. 18 
+LS Securities Research 3 
+표3 통화정책성명문 변화 
+2026 년 4 월 FOMC 2026 년 6 월 FOMC 
+Recent indicators suggest that economic activity has been expanding at a 
+solid pace . Job gains have remained low, on average , and the 
+unemployment rate has been little changed in recent months. Inflation is 
+elevated, in part reflecting the recent increase in global energy prices. 
+The Federal Open Market Committee approved the following statement for 
+release by a 12 – 0 vote: 
+Economic activity is expanding at a solid pace despite elevated uncertainty 
+that owes, in part, to the conflict in the Middle East. Productivity growth and 
+capital investment are strong. Job gains have kept pace with the workforce, 
+and the unemployment rate has changed little. 
+The Committee seeks to achieve maximum employment and inflation at the 
+rate of 2 percent over the longer run. Developments in the Middle East are 
+contributing to a high level of uncertainty about the economic outlook. 
+The Committee is attentive to the risks to both sides of its dual mandate. 
+Inflation remains elevated relative to the Committee's 2 percent goal, in part 
+reflecting supply shocks that have driven price increases in certain sectors, 
+including energy. The Committee will deliver price stability. 
+In support of its goals, the Committee decided to maintain the target range 
+for the federal funds rate at 3 -1/2 to 3-3/4 percent. In considering the 
+extent and timing of additional adjustments to the target range for the 
+federal funds rate, the Committee will carefully assess incoming data, the 
+evolving outlook, and the balance of risks. The Committee is strongly 
+committed to supporting maximum employment and returning inflation to 
+its 2 percent objective. 
+The Committee decided to maintain the target range for the federal funds 
+rate at 3-1/2 to 3-3/4 percent, in support of the Federal Reserve's dual 
+mandate. The Committee reaffirmed its policy of maintaining ample 
+reserves in the banking system. 
+In assessing the appropriate stance of monetary policy, the Committee will 
+continue to monitor the implications of incoming information for the 
+economic outlook. The Committee would be prepared to adjust the stance 
+of monetary policy as appropriate if risks emerge that could impede the 
+attainment of the Committee's goals. The Committee's assessments will 
+take into account a wide range of information, including readings on labor 
+market conditions, inflation pressures and inflation expectations, and 
+financial and international developments. 
+- 
+Voting for the monetary policy action were Jerome H. Powell, Chair; John C. 
+Williams, Vice Chair; Michael S. Barr; Michelle W. Bowman; Lisa D. Cook; 
+Philip N. Jefferson; Anna Paulson; and Christopher J. Waller. Voting against 
+this action were Stephen I. Miran, who preferred to lower the target range 
+for the federal funds rate by 1/4 percentage point at this meeting; and 
+Beth M. Hammack, Neel Kashkari, and Lorie K. Logan, who supported 
+maintaining the target range for the federal funds rate but did not 
+support inclusion of an easing bias in the statement at this time. 
+- 
+자료: Fed, LS증권 리서치센터 
+ 
+표4 5 개의 태스크 포스 관련 주요 내용 
+5 개 주요 사안 내용 
+연준 소통 
+(Communications) - 통화정책 성명문∙기자 간담회∙경제전망(SEP) 및 점도표∙회의록 및 녹취록 등 소통 방식 전면 재검토 
+대차대조표 
+(Balance sheet) 
+- 현재의 풍부한 지급준비금 제도의 편익과 잠재적 리스크 평가 
+- 연준 대차대조표 자산 구성 적절한지 검토 
+- 기준금리 도구와 대차대조표 도구 간 불균등한 통화정책 전달 경로 분석 
+- 통화정책 집행 및 운영을 위한 대안적 프레임워크 설계 
+데이터(Data) 
+- 통화∙경제 통계 관련 구식 데이터 수집 방법론 개선 및 오차 범위 축소 
+- 민간 기업 CEO 들이 사용하는 실시간 데이터 소스 적극 도입 
+-  AI 및 최신 분석 기법 활용해 지표가 '근원(core)이냐, 비근원(Non-Core)이냐'는 단순 이분법을 넘어 정밀 데이터 구축 
+- 정책 결정자들에게 단순 통계가 아닌, 즉각 실행 가능한 '동시대적∙실시간 정보' 제공 
+전환기 시대의 생산성과 고용 
+(Productivity and jobs) 
+-  AI 및 신기술 도입 속도∙파급 범위∙거시경제적 영향력 정밀 조사 
+- 현재 기술 붐이 인프라 투자(데이터 센터, 전력 등)으로 인해 수요만 자극하는 단계인지, 실제 생산성 향상이라는 공급  
+확대로 이어지는 단계인지 그 속도와 시차 분석 
+- 생산성 향상이 고용 시장의 체제 및 잠재성장률에 미치는 통화정책적 시사점 도출 
+인플레이션 프레임워크 
+(Inflation frameworks) 
+- 현대 경제 구조 변화 속에서 인플레이션을 유발하는 근본적인 동인(drivers) 재정의 
+- 인플레이션 측정 방식의 적절성 검토(데이터 TF 와 협업) 
+- 구조적으로 변화한 경제 환경(지정학 리스크, 기술 혁명 등) 가운데 물가안정을 전달하기 위한 통화정책적 아이디어 도출 
+-  2%라는 목표 수치 자체 변경은 2% 목표 달성하기 전까지는 재검토 할 이유 없음 
+자료: LS증권 리서치센터 
+--- Page 4 ---
+투자코멘트 / The Bond / 2026. 6. 18 
+ 
+LS Securities Research 4 
+그림4 간결한 통화정책 성명문(2006 년 1 월 FOMC, 앨런 그린스펀 의장) 
+ 
+자료: Fed, LS증권 리서치센터 
+ 
+그림5 구체적인 수치 제시하는 포워드 가이던스 최초 도입(2012 년 12 월 FOMC, 벤 버냉키 前 의장) 
+ 
+자료: Fed, LS증권 리서치센터 
+
+--- Page 5 ---
+ 투자코멘트 / The Bond / 2026. 6. 18 
+LS Securities Research 5 
+그림6 연준위원들의 성향(좌: 4/16, 우: 5/28) 
+  
+자료: InTouch Capital Markets, LS증권 리서치센터 
+ 
+그림7 장중 미국채 금리 추이 
+ 
+자료: Infomax, LS증권 리서치센터 
+ 
+그림8 CME Fedwatch(6/12)  그림9 CME Fedwatch(6/18) 
+ 
+ 
+ 
+자료: CME Fedwatch, LS증권 리서치센터  자료: CME Fedwatch, LS증권 리서치센터 
+4.41
+4.43
+4.45
+4.47
+4.49
+4.51
+4.53
+4.55
+4.57
+4.59
+4.05
+4.07
+4.09
+4.11
+4.13
+4.15
+4.17
+4.19
+4.21
+4.23
+0:00
+0:02
+0:06
+0:10
+0:15
+0:19
+0:23
+0:28
+0:32
+0:40
+0:47
+0:55
+1:03
+1:13
+1:23
+1:31
+1:39
+1:54
+2:06
+2:12
+2:20
+2:31
+2:42
+2:50
+3:01
+3:08
+3:16
+3:27
+3:35
+3:43
+3:51
+4:00
+4:06
+4:13
+4:21
+4:34
+4:50
+5:04
+5:09
+5:14
+5:19
+5:24
+5:28
+미국채 2년(좌) 미국채 10년(우)(%) (%)
+
+--- Page 6 ---
+투자코멘트 / The Bond / 2026. 6. 18 
+ 
+LS Securities Research 6 
+그림10 경제성장률 전망치  그림11 경제성장률 전망치에 대한 불확실성 및 리스크 평가 
+ 
+ 
+ 
+자료: Fed 「SEP(2026. 6.17)」, LS증권 리서치센터 
+ 
+그림12 실업률 전망치  그림13 실업률 전망치에 대한 불확실성 및 리스크 평가 
+ 
+ 
+ 
+자료: Fed 「SEP(2026. 6.17)」, LS증권 리서치센터 
+ 
+그림14 PCE 물가상승률 전망치  그림15 PCE 물가상승률 전망치에 대한 불확실성 및 리스크 평가 
+ 
+ 
+ 
+자료: Fed 「SEP(2026. 6.17)」, LS증권 리서치센터 
+ 
+그림16 Core PCE 물가상승률 전망치  그림17 Core PCE 물가상승률 전망치에 대한 불확실성 및 리스크 평가 
+ 
+ 
+ 
+자료: Fed 「SEP(2026. 6.17)」, LS증권 리서치센터 
+2.4 2.1 
+2.0 
+2.2 2.3 2.2 2.0 
+0.0
+0.5
+1.0
+1.5
+2.0
+2.5
+3.0
+2026 2027 2028 Longer Run
+경제성장률
+2025.06 2025.09 2025.12 2026.03 2026.06(%YoY)
+4.4
+4.3
+4.3 4.2 4.2
+3
+4
+5
+2026 2027 2028 Longer Run
+실업률
+2025.06 2025.09 2025.12 2026.03 2026.06(%)
+2.7 
+2.2 
+3.6 
+2.3 
+2.0 2.0 
+1.5
+2.0
+2.5
+3.0
+3.5
+4.0
+2026 2027 2028 Longer Run
+물가상승률(PCE)
+2025.06 2025.09 2025.12 2026.03 2026.06(%YoY)
+2.7 
+2.2 
+3.3 
+2.5 
+2.1 
+1.5
+2.0
+2.5
+3.0
+3.5
+2026 2027 2028
+물가상승률(근원 PCE)
+2025.06 2025.09 2025.12 2026.03 2026.06(%YoY)
+
+--- Page 7 ---
+ 투자코멘트 / The Bond / 2026. 6. 18 
+LS Securities Research 7 
+그림18 불확실성에 대한 Diffusion Indexes 
+ 
+주1: 경제전망치를 제시하지 않은 2020년 3월은 제외한 데이터 
+주2: 지난 20년 간 불확실성 수준과 비교해 전망 시 높다(Higher)고 답변한 수에서 낮다(Lower)고 답변한 수)를 전체 답변자 수로 나눈 값 
+자료: Fed 「SEP(2026. 6.17)」, LS증권 리서치센터 
+ 
+ 
+그림19 불확실성에 대한 Diffusion Indexes 
+ 
+주1: 경제전망치를 제시하지 않은 2020년 3월은 제외한 데이터 
+주2: 지난 20년 간 불확실성 수준과 비교해 전망 시 높다(Higher)고 답변한 수에서 낮다(Lower)고 답변한 수)를 전체 답변자 수로 나눈 값 
+자료: Fed 「SEP(2026. 6.17)」, LS증권 리서치센터 
+ 
+ 
+
+--- Page 8 ---
+투자코멘트 / The Bond / 2026. 6. 18 
+ 
+LS Securities Research 8 
+그림20 리스크에 대한 Diffusion Indexes 
+ 
+주1: 경제전망치를 제시하지 않은 2020년 3월은 제외한 데이터  
+주2: 상방 리스크(Weighted to the Upside)라고 답변한 수에서 하방 리스크(Weighted to the Downside)라고 답변한 수를 전체 답변자 수로 나눈 값 
+자료: Fed 「SEP(2026. 6.17)」, LS증권 리서치센터 
+ 
+ 
+그림21 리스크에 대한 Diffusion Indexes 
+ 
+주1: 경제전망치를 제시하지 않은 2020년 3월은 제외한 데이터  
+주2: 상방 리스크(Weighted to the Upside)라고 답변한 수에서 하방 리스크(Weighted to the Downside)라고 답변한 수를 전체 답변자 수로 나눈 값 
+자료: Fed 「SEP(2026. 6.17)」, LS증권 리서치센터 
+ 
+ 
+
+--- Page 9 ---
+ 투자코멘트 / The Bond / 2026. 6. 18 
+LS Securities Research 9 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Compliance Notice 
+본 자료에 기재된 내용들은 작성자 본인의 의견을 정확하게 반영하고 있으며 외부의 부당한 압력이나 간섭 없이 작성되었음을 확인합니다(작성자: 우혜영). 
+본 자료는 고객의 증권투자를 돕기 위한 정보제공을 목적으로 제작되었습니다. 본 자료에 수록된 내용은 당사 리서치본부가 신뢰할 만한 자료 및 정보를 바탕으로 작성한 것이나,  
+당사가 그 정확성이나 완전성을 보장할 수 없으므로 참고자료로만 활용하시기 바라며 유가증권 투자 시 투자자 자신의 판단과 책임하에 최종결정을 하시기 바랍니다.  
+따라서 본 자료는 어떠한 경우에도 고객의 증권투자 결과에 대한 법적 책임소재의 증빙자료로 사용될 수 없습니다. 
+본 자료는 당사의 저작물로서 모든 저작권은 당사에게 있으며 어떠한 경우에도 당사의 동의 없이 복제, 배포, 전송, 변형될 수 없습니다. 
+_ 동 자료는 제공시점 현재 기관투자가 또는 제 3 자에게 사전 제공한 사실이 없습니다.  
+_ 동 자료의 추천종목은 전일 기준 현재당사에서 1% 이상 보유하고 있지 않습니다. 
+_ 동 자료의 추천종목은 전일 기준 현재 당사의 조사분석 담당자 및 그 배우자 등 관련자가 보유하고 있지 않습니다. 
+_ 동 자료의 추천종목에 해당하는 회사는 당사와 계열회사 관계에 있지 않습니다. 
+ 
+ 

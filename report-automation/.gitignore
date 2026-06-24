@@ -1,0 +1,6 @@
+.env
+raw/
+sessions/
+*.pdf
+__pycache__/
+*.session
